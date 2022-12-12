@@ -1,4 +1,4 @@
-# Capstone Project
+# [WIP] Capstone Project
 This is the capstone project of the Data Engineering Nanodegree from Udacity. 
 
 [TODO] INTRO
