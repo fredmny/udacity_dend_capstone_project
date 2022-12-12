@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "udacity_dend_capstone_project"
+version = "0.1.0"
+description = ""
+authors = ["Fred <fred.mny@gmail.com>"]
+readme = "README.md"
+packages = [{include = "udacity_dend_capstone_project"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+apache-airflow = "^2.4.3"
+psycopg2-binary = "^2.9.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,4 @@
+airflow/dags/__pycache__
+.vscode
+airflow/plugins/helpers/__pycache__
+airflow/plugins/operators/__pycache__
