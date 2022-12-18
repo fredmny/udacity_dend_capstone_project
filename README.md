@@ -43,3 +43,7 @@ The project consists of following files:
 The project is based on the initial project files and used the guidance provided by the Udacity Data Engineering Nanodegree.
 
 The `docker-compose.yml` is based on Bitnami's instructions and file, which can be found [here](https://github.com/bitnami/bitnami-docker-airflow)
+
+
+## Dependencies
+- Java (for running Spark)
