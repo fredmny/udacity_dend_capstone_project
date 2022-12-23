@@ -1,7 +1,30 @@
 # [WIP] Capstone Project
 This is the capstone project of the Data Engineering Nanodegree from Udacity. 
 
-[TODO] INTRO
+In this project we build the ETL pipeline of an analytical data model of flights delays and cancellations. As an example, this data could be used by companies or even users to identify patterns in these delays or cancellations and use this information to make better decisions when planning trips.
+
+Since it's a data model for analytical (and not transactional) purposes, a daily update (daily run of the workflow) should be necessary.
+
+## Data model
+For the data model we have chosen the star-schema, since it's easy to query for making analyses.
+![flights data model](./images/data_model.png)
+
+The model is composed of:
+- `fct_flights` - fact table with each line being a flight as the granularity
+- `dim_date` - dimension table opening the data info in year, month, day, quarter and semester to facilitate the clusterization of flights data in thes timespans
+- `dim_airport` - dimension table with more information about airports
+- `dim_airlines` - dimension table with more data about airlines
+## Project steps
+The major steps taken in the project were:
+1. Find a data for the project with following prerequisites:
+    - at least 2 different sources
+    - at least 2 different formats
+    - at leas 1M rows
+2. Explore the data
+    - Done in first part of `data_exploration.ipynb` 
+3. Develop the data model (fact and dimension tables)
+    - Done in second part of `data_explorations.ipynb`
+4. Develop the ETL
 
 The data is originated from files within:
 [TODO]
