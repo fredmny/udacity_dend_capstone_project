@@ -1,4 +1,4 @@
-# [WIP] Capstone Project
+# Capstone Project
 This is the capstone project of the Data Engineering Nanodegree from Udacity. 
 
 In this project we build the ETL pipeline of an analytical data model of flights delays and cancellations. As an example, this data could be used by companies or even users to identify patterns in these delays or cancellations and use this information to make better decisions when planning trips.
@@ -11,9 +11,12 @@ For the data model we have chosen the star-schema, making it easy to aggregate d
 
 The model is composed of:
 - `fct_flights` - fact table with each line being a flight as the granularity
+    - partitioned by: `dt`
 - `dim_date` - dimension table opening the data info in year, month, day, quarter and semester to facilitate the clusterization of flights data in thes timespans
-- `dim_airport` - dimension table with more information about airports
+- `dim_airports` - dimension table with more information about airports
+    - partitioned by: `iso_country`
 - `dim_airlines` - dimension table with more data about airlines
+    - partitioned by: `country`
 
 A data dictionary can be found [here](./DATA-DICTIONARY.md)
 ## Data pipeline
@@ -34,6 +37,7 @@ The major steps taken in the project were:
 3. Develop the data model (fact and dimension tables)
     - More info second part of `data_explorations.ipynb`
 4. Develop the ETL
+5. Develop Airflow DAG and Docker environment
 ## Data sources
 - Flights:
     - [source](https://www.kaggle.com/datasets/yuanyuwendymu/airline-delay-and-cancellation-data-2009-2018)
@@ -68,25 +72,17 @@ What should be done if:
 2. Create two s3 buckets:
     - One for the source data
     - One for the transformed tables that will be in the `.parquet` format
-<!-- 3. Run `docker compose up -d` and log in to Airflow on `localhost:8080`
-    - user: `admin`
-    - password: `admin`
-4. Add connections with above created credentials and cluster inf to Airflow:
-    - Amazon Web Services: name `aws_credentials`
-    - Postgres: name `redshift`
-5. Enable the dag -->
-## Main files
-The project consists of following files:
-- `docker-compose.yml` - Creates the docker containers, volumes and network
-- `plugins/operators/*.py` - Custom operators used by the dag
-- `plugins/helpers/sql_queries.py` - SQL queries to transform the data. Used within the dag.
-- `dags/sparkify_etl.py` - Airflow dag
-- `pyproject.yml` and `poetry.lock` - Files for the virtual environment (used for the development)
+3. Add IAM access and secret key into a file called `dl.cfg` (use the supplied `example_dl.cfg`)
+4. Create a virtual environment with Poetry through `$ poetry install` and access it with `$ poetry shell`
+5. Run `$ python flights_etl.py`
+## Airflow
+Deploying the etl through Airflow in the environment to be built with the provided `DOCKERFILE` and `docker-compose.yml` is still a work in progress and documentation will be updated accordingly when this is finished.
 ## References
 - The `docker-compose.yml` is based on Bitnami's instructions and file, which can be found [here](https://github.com/bitnami/bitnami-docker-airflow)
 - For delay and cancellation codes: [BTS - Technical Directive: On-Time Reporting](https://www.bts.gov/topics/airlines-and-airports/number-23-technical-directive-time-reporting-effective-jan-1-2014)
 - Specifications about the delay categories: [BTS - Understanding the Reporting of Causes of Flight Delays and Cancellations](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations)
 - Glossary for further terms: [BTS - Glossary](https://www.transtats.bts.gov/Glossary.asp)
+- Instructions for creating the Docker image: [Deploying Airflow with Docker](https://medium.com/lynx-data-engineering/deploying-airflow-with-docker-20c72821bc7b)
 
 ## Dependencies
 - For development create a Poetry env using the `pyproject.toml` and `poetry.locl` files.
