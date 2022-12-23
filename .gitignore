@@ -6,3 +6,4 @@ data
 spark-cluster.pem
 awsuser.csv
 tests
+dl.cfg
