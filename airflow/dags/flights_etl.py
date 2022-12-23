@@ -4,7 +4,6 @@ from airflow.operators.dummy_operator import DummyOperator
 from airflow.contrib.operators.spark_submit_operator import SparkSubmitOperator
 
 # Parameters\
-spark_master = "spark://spark:7077"
 spark_app_name = "Flights ETL"
 config_file_path = "/usr/local/spark/resources/data/airflow.cfg"
 input_path='s3a://fw-flights-source'
@@ -29,8 +28,7 @@ dag = DAG(
         "flights", 
         default_args=default_args, 
         description='Transforms data to analyze flights data',
-        # schedule_interval='0 3 * * *'
-
+        schedule_interval='0 3 * * *'
     )
 
 start = DummyOperator(task_id="start", dag=dag)
@@ -38,15 +36,36 @@ start = DummyOperator(task_id="start", dag=dag)
 process_airlines = SparkSubmitOperator(
     task_id="process_airline_data",
     dag=dag,
-    application="/usr/local/spark/app/process_airline_data.py",
+    application="/home/user/airflow/spark/app/process_airline_data.py",
     name=spark_app_name,
-    conn_id="spark_default",
+    conn_id="spark_local",
     verbose=1,
-    conf={"spark.master":spark_master},
+    conf={"spark.master":"local[*]"},
     application_args=[config_file_path]
 )
 
+process_airports = SparkSubmitOperator(
+    task_id="process_airport_data",
+    dag=dag,
+    application="/home/user/airflow/spark/app/process_airport_data.py",
+    name=spark_app_name,
+    conn_id="spark_local",
+    verbose=1,
+    conf={"spark.master":"local[*]"},
+    application_args=[config_file_path]
+)
+
+process_flights = SparkSubmitOperator(
+    task_id="process_flights_data",
+    dag=dag,
+    application="/home/user/airflow/spark/app/process_flights_data.py",
+    name=spark_app_name,
+    conn_id="spark_local",
+    verbose=1,
+    conf={"spark.master":"local[*]"},
+    application_args=[config_file_path]
+)
 
 end = DummyOperator(task_id="end", dag=dag)
 
-start >> process_airlines >> end
+start >> [process_airlines, process_airports, process_flights] >> end 

@@ -4,7 +4,7 @@ version: '3.4'
 services:
   airflow:
     tty: true
-    image: fred-airflow:latest
+    image: fred-arflow:latest
     container_name: airflow
     environment:
       USER_ID: '${LOCAL_USER_ID:-9009}'

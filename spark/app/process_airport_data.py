@@ -5,15 +5,40 @@ from pyspark.sql import functions as F
 from pyspark.sql import Window
 import os
 
-input_path='s3a://fw-flights-source'
-output_path='s3a://fw-flights-tables'
-airports_path = 'airports/airports-codes_json.json'
-dim_table = 'dim_airports'
+spark = SparkSession \
+  .builder \
+  .config(
+    "spark.jars.packages", 
+    "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375"
+  ) \
+  .config(
+    'spark.hadoop.fs.s3a.aws.credentials.provider', 
+    'org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider'
+  )\
+  .config(
+    "spark.hadoop.fs.s3a.access.key", 
+    ''
+  ) \
+  .config(
+    "spark.hadoop.fs.s3a.secret.key", 
+    ''
+  ) \
+  .getOrCreate()
 
+input_path='s3a://fw-flights-source'
+output_path='s3a://fw-flights-tbl'
+airports_path = 'airports/airports-codes_json.json'
+dim_table = 'dim_airports.parquet'
+
+# Reading raw data from S3
+logging.info('Creating stg_airports spark dataframe')
 stg_airports = spark.read.json(
   os.path.join(input_path, airports_path)
 )
 
+logging.info(f'Transforming data from {airports_path}')
+
+# Selecting columns from stg df
 dim_airports = stg_airports.selectExpr(
   'iata_code',
   'name',
@@ -69,5 +94,6 @@ dim_airports = dim_airports.withColumn(
 dim_airports = dim_airports.filter(F.col('row_n') == 1)
 dim_airports = dim_airports.drop('row_n', 'airport_code')
 
+logging.info(f'Writing data into {os.path.join(output_path, dim_table)}')
 dim_airports.write.partitionBy('iso_country').mode('overwrite')\
-.parquet(os.path.join(output_path, dim_table))
+  .parquet(os.path.join(output_path, dim_table))
