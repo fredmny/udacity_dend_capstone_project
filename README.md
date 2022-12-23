@@ -51,6 +51,14 @@ The major steps taken in the project were:
 Spark is being used to transform the data, writing it to `parquet` files, since it's one of the industry standards for big data. This means that it's easily scalable (e.g. using cloud solutions) and there are a lot of tools that use it (e.g. Databricks), which make it easier to create a more robust system to deploy the ETL.
 
 We save the data to s3, since we save data in files (`parquet`) and are using AWS, the most used cloud provider. 
+## Addressing other scenarios
+What should be done if:
+- The data was increased by 100x.
+    - This should be no problem since we're using Spark. Only the clusters would have to be scaled (size and maybe type) to attend the higher processin power. 
+- The pipelines would be run on a daily basis by 7 am every day.
+    - The pipeline would have to be scheduled through a cron job or an orchestrator (like airflow) to run at this time
+- The database needed to be accessed by 100+ people.
+    - The cluster used by the people to query the data would have to be scaled accordingly. If this were in a company and they were still querying the data manually, the company should consider implementing a BI tool
 ## How to run the code
 1. Create IAM user with:
     1. Programatig access
@@ -81,4 +89,4 @@ The project consists of following files:
 - Glossary for further terms: [BTS - Glossary](https://www.transtats.bts.gov/Glossary.asp)
 
 ## Dependencies
-- Java (for running Spark)
+- For development create a Poetry env using the `pyproject.toml` and `poetry.locl` files.
