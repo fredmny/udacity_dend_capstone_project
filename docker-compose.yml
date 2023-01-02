@@ -1,10 +1,10 @@
 ---
-version: '3.4'
+version: '1.0'
 
 services:
   airflow:
     tty: true
-    image: fred-arflow:latest
+    image: airflow-fred:latest
     container_name: airflow
     environment:
       USER_ID: '${LOCAL_USER_ID:-9009}'

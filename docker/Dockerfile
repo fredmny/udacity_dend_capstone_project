@@ -5,13 +5,13 @@ ENV AIRFLOW_HOME=/home/user/airflow
 ENV SPARK_HOME=/usr/local/spark
 ENV PYTHONPATH=/usr/bin/python3:$SPARK_HOME/python/lib/py4j-0.10.8.1-src.zip
 ENV PYSPARK_PYTHON=/usr/bin/python3
-ENV SPARK_VERSION=3.2.3
+ENV SPARK_VERSION=3.3.1
 
 # Download Spark
-RUN wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.2.tgz && \
-    tar xvf spark-${SPARK_VERSION}-bin-hadoop3.2.tgz && \
-    mv spark-${SPARK_VERSION}-bin-hadoop3.2 $SPARK_HOME && \
-    rm spark-${SPARK_VERSION}-bin-hadoop3.2.tgz
+RUN wget https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
+    tar xvf spark-${SPARK_VERSION}-bin-hadoop3.tgz && \
+    mv spark-${SPARK_VERSION}-bin-hadoop3 $SPARK_HOME && \
+    rm spark-${SPARK_VERSION}-bin-hadoop3.tgz
 
 #Copying google cloud storage connector with spark
 #COPY gcs_connector_hadoop2.jar /opt/spark-${SPARK_VERSION}-bin-hadoop2.7/jars
@@ -41,12 +41,12 @@ COPY config/supervisord.conf /home/user/supervisor/conf.d/supervisord.conf
 RUN mkdir /home/user/supervisor/logs
 
 # Donwload haddop jar packages neede to access S3
-RUN wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.2.4/hadoop-aws-3.2.4.jar && \
-    mv hadoop-aws-3.2.4.jar /usr/local/spark/jars/ && \
-    wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.11.901/aws-java-sdk-bundle-1.11.901.jar && \
-    mv aws-java-sdk-bundle-1.11.901.jar /usr/local/spark/jars/ && \
-    wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.2.4/hadoop-common-3.2.4.jar && \
-    mv hadoop-common-3.2.4.jar /usr/local/spark/jars/ 
+RUN wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar && \
+    mv hadoop-aws-3.3.4.jar /usr/local/spark/jars/ && \
+    wget https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar && \
+    mv aws-java-sdk-bundle-1.12.262.jar /usr/local/spark/jars/ && \
+    wget https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-common/3.3.4/hadoop-common-3.3.4.jar && \
+    mv hadoop-common-3.3.4.jar /usr/local/spark/jars/ 
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
