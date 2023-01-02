@@ -64,6 +64,8 @@ What should be done if:
 - The database needed to be accessed by 100+ people.
     - The cluster used by the people to query the data would have to be scaled accordingly. If this were in a company and they were still querying the data manually, the company should consider implementing a BI tool
 ## How to run the code
+You can run the ETL either through the `flights_etl.py` file directly, installing all the dependencies or through Apache Airflow running within the Docker container
+### Bare Python script
 1. Create IAM user with:
     1. Programatig access
     2. Attached Policies:
@@ -75,14 +77,40 @@ What should be done if:
 3. Add IAM access and secret key into a file called `dl.cfg` (use the supplied `example_dl.cfg`)
 4. Create a virtual environment with Poetry through `$ poetry install` and access it with `$ poetry shell`
 5. Run `$ python flights_etl.py`
-## Airflow
-Deploying the etl through Airflow in the environment to be built with the provided `DOCKERFILE` and `docker-compose.yml` is still a work in progress and documentation will be updated accordingly when this is finished.
+### Airflow
+1. Create the Docker container:
+    ```
+    cd docker
+    docker build -t airflow-fred:latest .
+    cd ..
+    ```
+2. Run the Docker container:
+    ```
+    docker compose up -d 
+    ```
+3. Access Airflow at `localhost:8080` in your web browser
+    - user: `admin`
+    - pwd: `admin`
+4. Add following connections in the Airflow UI:
+    - Spark local:
+        - Name: `spark_local`
+        - Connection Type: `Spark`
+        - Host: `local[*]
+    - AWS:
+        - Name: `aws_credentials`
+        - Connection Type: `Amazon Web Services`
+        - AWS Access Key ID: `<your aws access key id>`
+        - AWS Access Key Secret: `< youar awd access key secret>`
+5. Activate and run dag in Airflow UI
+6. After finishing, shut down the running container:
+    ```
+    docker compose down
+    ```
 ## References
-- The `docker-compose.yml` is based on Bitnami's instructions and file, which can be found [here](https://github.com/bitnami/bitnami-docker-airflow)
 - For delay and cancellation codes: [BTS - Technical Directive: On-Time Reporting](https://www.bts.gov/topics/airlines-and-airports/number-23-technical-directive-time-reporting-effective-jan-1-2014)
 - Specifications about the delay categories: [BTS - Understanding the Reporting of Causes of Flight Delays and Cancellations](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations)
 - Glossary for further terms: [BTS - Glossary](https://www.transtats.bts.gov/Glossary.asp)
 - Instructions for creating the Docker image: [Deploying Airflow with Docker](https://medium.com/lynx-data-engineering/deploying-airflow-with-docker-20c72821bc7b)
 
 ## Dependencies
-- For development create a Poetry env using the `pyproject.toml` and `poetry.locl` files.
+- For development create a Poetry env using the `pyproject.toml` and `poetry.lock` files.
