@@ -111,6 +111,6 @@ You can run the ETL either through the `flights_etl.py` file directly, installin
 - Specifications about the delay categories: [BTS - Understanding the Reporting of Causes of Flight Delays and Cancellations](https://www.bts.gov/topics/airlines-and-airports/understanding-reporting-causes-flight-delays-and-cancellations)
 - Glossary for further terms: [BTS - Glossary](https://www.transtats.bts.gov/Glossary.asp)
 - Instructions for creating the Docker image: [Deploying Airflow with Docker](https://medium.com/lynx-data-engineering/deploying-airflow-with-docker-20c72821bc7b)
-- For information about jar packages (Spark and Hadoop for Docker env) [Maven Repository](https://mvnrepository.com/)
+- For information about jar packages and its dependencies (used for Spark and Hadoop for Docker env): [Maven Repository](https://mvnrepository.com/)
 ## Dependencies
 - For development create a Poetry env using the `pyproject.toml` and `poetry.lock` files.
