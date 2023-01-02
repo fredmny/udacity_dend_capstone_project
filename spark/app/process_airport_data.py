@@ -1,15 +1,20 @@
 import logging
-# from airflow.contrib.hooks.aws_hook import AwsHook
+from airflow.contrib.hooks.aws_hook import AwsHook
 from pyspark.sql import SparkSession
 from pyspark.sql import functions as F
 from pyspark.sql import Window
 import os
 
+aws_hook = AwsHook('aws_credentials')
+credentials = aws_hook.get_credentials()
+aws_access_key_id = credentials.access_key
+aws_secret_access_key = credentials.secret_key
+
 spark = SparkSession \
   .builder \
   .config(
     "spark.jars.packages", 
-    "org.apache.hadoop:hadoop-aws:3.2.0,com.amazonaws:aws-java-sdk-bundle:1.11.375"
+    "org.apache.hadoop:hadoop-aws:3.3.4,com.amazonaws:aws-java-sdk-bundle:1.12.262"
   ) \
   .config(
     'spark.hadoop.fs.s3a.aws.credentials.provider', 
@@ -17,11 +22,11 @@ spark = SparkSession \
   )\
   .config(
     "spark.hadoop.fs.s3a.access.key", 
-    ''
+    aws_access_key_id
   ) \
   .config(
     "spark.hadoop.fs.s3a.secret.key", 
-    ''
+    aws_secret_access_key
   ) \
   .getOrCreate()
 
