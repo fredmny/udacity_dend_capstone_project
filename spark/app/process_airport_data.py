@@ -32,7 +32,7 @@ spark = SparkSession \
 
 input_path='s3a://fw-flights-source'
 output_path='s3a://fw-flights-tbl'
-airports_path = 'airports/airports-codes_json.json'
+airports_path = 'airports/airport-codes_json.json'
 dim_table = 'dim_airports.parquet'
 
 # Reading raw data from S3

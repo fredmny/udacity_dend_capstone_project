@@ -18,7 +18,7 @@ default_args = {
     "start_date": datetime(now.year, now.month, now.day),
     "email_on_failure": False,
     "email_on_retry": False,
-    "retries": 1,
+    "retries": 2,
     "retry_delay": timedelta(minutes=5),
     "catchup": False,
     "catchup_by_default": False,
@@ -44,29 +44,28 @@ process_airlines = SparkSubmitOperator(
     application_args=[config_file_path]
 )
 
-# process_airports = SparkSubmitOperator(
-#     task_id="process_airport_data",
-#     dag=dag,
-#     application="/home/user/airflow/spark/app/process_airport_data.py",
-#     name=spark_app_name,
-#     conn_id="spark_local",
-#     verbose=1,
-#     conf={"spark.master":"local[*]"},
-#     application_args=[config_file_path]
-# )
+process_airports = SparkSubmitOperator(
+    task_id="process_airport_data",
+    dag=dag,
+    application="/home/user/airflow/spark/app/process_airport_data.py",
+    name=spark_app_name,
+    conn_id="spark_local",
+    verbose=1,
+    conf={"spark.master":"local[*]"},
+    application_args=[config_file_path]
+)
 
-# process_flights = SparkSubmitOperator(
-#     task_id="process_flights_data",
-#     dag=dag,
-#     application="/home/user/airflow/spark/app/process_flights_data.py",
-#     name=spark_app_name,
-#     conn_id="spark_local",
-#     verbose=1,
-#     conf={"spark.master":"local[*]"},
-#     application_args=[config_file_path]
-# )
+process_flights = SparkSubmitOperator(
+    task_id="process_flights_data",
+    dag=dag,
+    application="/home/user/airflow/spark/app/process_flights_data.py",
+    name=spark_app_name,
+    conn_id="spark_local",
+    verbose=1,
+    conf={"spark.master":"local[*]"},
+    application_args=[config_file_path]
+)
 
 end = DummyOperator(task_id="end", dag=dag)
 
-# start >> [process_airlines, process_airports, process_flights] >> end 
-start >> [process_airlines] >> end 
+start >> [process_airlines, process_airports, process_flights] >> end 
